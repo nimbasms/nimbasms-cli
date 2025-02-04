@@ -5,8 +5,8 @@ from typing import Optional
 import typer
 from rich.console import Console
 
-from .commands import accounts, extensions
-from .config.settings import config as settings
+from src.commands import accounts, extensions
+from src.config.settings import config as settings
 
 app = typer.Typer(
     help="Official CLI for Nimba SMS API",
