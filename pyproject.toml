@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nimbasms-cli"
-version = "0.1.0"
+version = "0.1.2"
 description = "Interface en ligne de commande officielle pour l'API Nimba SMS"
 authors = ["Nimba SMS <technical@nimbasms.com>"]
 readme = "README.md"
@@ -39,6 +39,7 @@ isort = "^5.13.0"
 flake8 = "^7.0.0"
 mypy = "^1.8.0"
 pre-commit = "^3.6.0"
+pyinstaller = "^6.3.0"
 
 [build-system]
 requires = ["poetry-core"]
