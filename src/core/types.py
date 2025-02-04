@@ -120,7 +120,7 @@ class Groupe(BaseModel):
     """Group model."""
     groupe_id: UUID = Field(description="Group identifier")
     name: str = Field(..., max_length=100)
-    added_at: str
+    added_at: int
     total_contact: int
 
 
@@ -154,7 +154,7 @@ class Message(BaseModel):
 class CreateMessage(BaseModel):
     """Model for creating a new message."""
     sender_name: str = Field(..., max_length=11)
-    to: List[str] = Field(..., min_items=1, max_items=10)
+    to: List[str] = Field(..., min_length=1, max_length=10)
     message: str = Field(..., max_length=665)
 
 
@@ -193,6 +193,13 @@ class RequestVerification(BaseModel):
     attempts: Optional[int] = Field(None, ge=3, le=10)
     code: Optional[str] = None
     code_length: Optional[int] = Field(None, ge=4, le=8)
+    url: Optional[HttpUrl] = None
+
+
+class RequestVerificationResponse(BaseModel):
+    """Verification request model."""
+    verificationid: UUID = Field(default=UUID("c195e2f8-bca2-4173-886d-4820fd578d21"))
+    code: Optional[str] = None
     url: Optional[HttpUrl] = None
 
 

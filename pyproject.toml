@@ -1,0 +1,57 @@
+[tool.poetry]
+name = "nimbasms-cli"
+version = "0.1.0"
+description = "Interface en ligne de commande officielle pour l'API Nimba SMS"
+authors = ["Nimba SMS <technical@nimbasms.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+license = "MIT"
+repository = "https://github.com/nimbasms/nimbasms-cli"
+keywords = ["sms", "cli", "nimba", "messaging"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Topic :: Communications :: Telephony",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.14"
+typer = {extras = ["all"], version = "^0.9.0"}
+httpx = "^0.26.0"
+pydantic = "^2.5.0"
+rich = "^13.7.0"
+python-dotenv = "^1.0.0"
+pytz = "^2024.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-cov = "^4.1.0"
+respx = "^0.20.2"
+black = "^24.1.0"
+isort = "^5.13.0"
+flake8 = "^7.0.0"
+mypy = "^1.8.0"
+pre-commit = "^3.6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+nimbasms = "src.cli:app"
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3

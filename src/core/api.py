@@ -9,7 +9,10 @@ from typing_extensions import Annotated
 
 from .types import (
     Account, Extension, CreateExtension, ExtensionAction,
-    PricingPlan, ExtensionPublish
+    PricingPlan, ExtensionPublish, Message, CreateMessage,
+    MessageResponse, Contact, CreateContact, Groupe,
+    SenderName, RequestVerification, CheckVerification,
+    RequestVerificationResponse
 )
 
 
@@ -327,7 +330,8 @@ class APIClient:
         )
         response.raise_for_status()
         data = response.json()
-        return [Contact(**contact) for contact in data]
+        contacts_data = data["results"] if isinstance(data, dict) else data
+        return [Contact(**contact) for contact in contacts_data]
 
     def create_contact(self, contact: CreateContact) -> Contact:
         """Create a new contact.
@@ -387,7 +391,7 @@ class APIClient:
         return [SenderName(**name) for name in data["results"]]
 
     # Verifications
-    def create_verification(self, verification: RequestVerification) -> RequestVerification:
+    def create_verification(self, verification: RequestVerification) -> RequestVerificationResponse:
         """Create a new verification request.
         
         Args:
@@ -398,11 +402,12 @@ class APIClient:
         """
         response = self.client.post(
             f"{self.base_url}/verifications",
-            json=verification.model_dump(exclude_none=True),
+            json=verification.model_dump(exclude_none=True, mode='json'),
             auth=self.auth
         )
         response.raise_for_status()
-        return RequestVerification(**response.json())
+        print(response.json())
+        return RequestVerificationResponse(**response.json())
 
     def check_verification(
         self, verification_id: UUID, verification: CheckVerification

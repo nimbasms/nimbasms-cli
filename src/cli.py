@@ -5,7 +5,13 @@ from typing import Optional
 import typer
 from rich.console import Console
 
-from src.commands import accounts, extensions
+from src.commands import accounts
+from src.commands import extensions
+from src.commands import messages
+from src.commands import contacts
+from src.commands import groups
+from src.commands import sendernames
+from src.commands import verifications
 from src.config.settings import config as settings
 
 app = typer.Typer(
@@ -16,6 +22,11 @@ app = typer.Typer(
 # Add sub-commands
 app.add_typer(accounts.app, name="account", help="Manage account settings and information")
 app.add_typer(extensions.app, name="extensions", help="Manage extensions")
+app.add_typer(messages.app, name="messages", help="Manage Message")
+app.add_typer(contacts.app, name="contacts", help="Manage Contact")
+app.add_typer(groups.app, name="groups", help="Manage Groups")
+app.add_typer(sendernames.app, name="sendernames", help="Manage SenderName")
+app.add_typer(verifications.app, name="verifications", help="Manage Verification")
 
 console = Console()
 
