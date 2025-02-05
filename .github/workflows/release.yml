@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - 'v*'  # Trigger on version tags
-  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   build:
@@ -24,7 +23,8 @@ jobs:
             pyinstaller_args: --add-data "src;src"
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
       
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -35,6 +35,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install poetry
+          poetry lock --no-update
           poetry install
 
       - name: Build binary
@@ -42,30 +43,44 @@ jobs:
           poetry run pip install pyinstaller
           poetry run pyinstaller src/cli.py --clean --onefile ${{ matrix.pyinstaller_args }} --name ${{ matrix.asset_name }}
         
-      - name: Upload artifact
+      - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.asset_name }}
           path: dist/${{ matrix.asset_name }}*
           retention-days: 1
 
-  create-release:
+  release:
+    name: Create Release
     needs: build
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: write
     steps:
-      - name: Download artifacts
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
+
+      - name: Prepare binaries for release
+        run: |
+          chmod +x nimbasms-linux-amd64/nimbasms-linux-amd64
+          chmod +x nimbasms-darwin-amd64/nimbasms-darwin-amd64
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
           files: |
             nimbasms-linux-amd64/nimbasms-linux-amd64
             nimbasms-darwin-amd64/nimbasms-darwin-amd64
             nimbasms-windows-amd64.exe/nimbasms-windows-amd64.exe
-          draft: false
-          prerelease: false
-          generate_release_notes: true
