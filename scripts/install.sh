@@ -17,18 +17,13 @@ case $ARCH in
     *) echo -e "${RED}Unsupported architecture: $ARCH${NC}"; exit 1 ;;
 esac
 case $OS in
-    x86_64)
-            BINARY_NAME="nimbasms-darwin-x86_64"
-            ;;
-        arm64)
-            BINARY_NAME="nimbasms-darwin-arm64"
-            ;;
-        *)
-            echo -e "${RED}Unsupported macOS architecture: $ARCH${NC}"
-            exit 1
-            ;;
-    esac
-    ;;
+    darwin)
+        BINARY_NAME="nimbasms-darwin-${ARCH}"
+        ;;
+    linux)
+        BINARY_NAME="nimbasms-linux-${ARCH}"
+        ;;
+    *) echo -e "${RED}Unsupported operating system: $OS${NC}"; exit 1 ;;
 esac
 mkdir -p $TEMP_DIR
 cd $TEMP_DIR
