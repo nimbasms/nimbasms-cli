@@ -35,6 +35,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Pre-config macos
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install gettext
+          brew link gettext --force
       
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -45,8 +51,6 @@ jobs:
       - name: Set up croos-compilation
         if: matrix.os == 'macos-latest'
         run: |
-          brew install gettext
-          brew link gettext --force
           pip install cibuildwheel
 
       - name: Install dependencies
