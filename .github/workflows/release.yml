@@ -20,11 +20,15 @@ jobs:
             asset_name: nimbasms-linux-arm64
             pyinstaller_args: --add-data "src:src"
           
-          # macOS build (universal binary)
+          # macOS builds (séparés pour x86_64 et arm64)
           - os: macos-latest
-            arch: universal2
-            asset_name: nimbasms-darwin-universal2
-            pyinstaller_args: --add-data "src:src" --target-arch universal2
+            arch: x86_64
+            asset_name: nimbasms-darwin-x86_64
+            pyinstaller_args: --add-data "src:src"
+          - os: macos-latest
+            arch: arm64
+            asset_name: nimbasms-darwin-arm64
+            pyinstaller_args: --add-data "src:src"
           
           # Windows build
           - os: windows-latest
@@ -39,12 +43,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+          architecture: ${{ matrix.arch }}
 
-      # Spécifique à macOS pour supporter universal2
-      - name: Set up macOS dependencies
+      # Configuration spécifique pour macOS
+      - name: Configure macOS build
         if: matrix.os == 'macos-latest'
         run: |
-          pip install delocate
+          DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+          SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+          echo "DEVELOPER_DIR=$DEVELOPER_DIR" >> $GITHUB_ENV
+          echo "SDKROOT=$SDKROOT" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: |
@@ -88,7 +96,8 @@ jobs:
         run: |
           chmod +x nimbasms-linux-amd64/nimbasms-linux-amd64 || true
           chmod +x nimbasms-linux-arm64/nimbasms-linux-arm64 || true
-          chmod +x nimbasms-darwin-universal2/nimbasms-darwin-universal2 || true
+          chmod +x nimbasms-darwin-x86_64/nimbasms-darwin-x86_64 || true
+          chmod +x nimbasms-darwin-arm64/nimbasms-darwin-arm64 || true
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -103,5 +112,6 @@ jobs:
           files: |
             nimbasms-linux-amd64/nimbasms-linux-amd64
             nimbasms-linux-arm64/nimbasms-linux-arm64
-            nimbasms-darwin-universal2/nimbasms-darwin-universal2
+            nimbasms-darwin-x86_64/nimbasms-darwin-x86_64
+            nimbasms-darwin-arm64/nimbasms-darwin-arm64
             nimbasms-windows-amd64.exe/nimbasms-windows-amd64.exe
