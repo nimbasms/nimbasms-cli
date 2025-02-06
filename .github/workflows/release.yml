@@ -45,7 +45,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install poetry
-          poetry lock
           poetry install
 
       - name: Build binary
@@ -54,7 +53,7 @@ jobs:
           poetry run pyinstaller src/cli.py --clean --onefile ${{ matrix.pyinstaller_args }} --name ${{ matrix.asset_name }}
         
       - name: Upload binary artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.asset_name }}
           path: dist/${{ matrix.asset_name }}*

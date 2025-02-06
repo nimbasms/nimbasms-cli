@@ -229,4 +229,4 @@ When adding new features, please:
 3. Update the command help text
 4. Add examples to the documentation
 
-For more information, check our [Contributing Guidelines](CONTRIBUTING.md).
+For more information, technical@nimbasms.com.
