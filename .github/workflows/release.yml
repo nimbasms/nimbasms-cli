@@ -56,6 +56,9 @@ jobs:
           echo "Architecture: $(uname -m)"
 
       - name: Build binary
+        env:
+          MACOSX_DEPLOYMENT_TARGET: "10.15"
+          ARCHFLAGS: "-arch x86_64"
         run: |
           poetry run pip install pyinstaller
           poetry run pyinstaller src/cli.py --clean --onefile ${{ matrix.pyinstaller_args }} --name ${{ matrix.asset_name }}
