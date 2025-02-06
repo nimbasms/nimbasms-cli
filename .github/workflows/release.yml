@@ -36,22 +36,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Pre-config macos
-        if: matrix.os == 'macos-latest'
-        run: |
-          brew install gettext
-          brew link gettext --force
-      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          architecture: 'x64'
-
-      - name: Set up croos-compilation
-        if: matrix.os == 'macos-latest'
-        run: |
-          pip install cibuildwheel
 
       - name: Install dependencies
         run: |
@@ -59,14 +47,19 @@ jobs:
           pip install poetry
           poetry install
 
+      - name: Debug environment (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          echo "Python version: $(python --version)"
+          echo "Pip version: $(pip --version)"
+          echo "Poetry version: $(poetry --version)"
+          echo "Architecture: $(uname -m)"
+
       - name: Build binary
-        env:
-          MACOSX_DEPLOYMENT_TARGET: "10.15"
-          ARCHFLAGS: "-arch x86_64"
         run: |
           poetry run pip install pyinstaller
           poetry run pyinstaller src/cli.py --clean --onefile ${{ matrix.pyinstaller_args }} --name ${{ matrix.asset_name }}
-        
+
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
