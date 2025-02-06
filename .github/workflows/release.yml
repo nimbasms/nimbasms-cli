@@ -23,11 +23,11 @@ jobs:
           - os: macos-latest
             arch: amd64
             asset_name: nimbasms-darwin-amd64
-            pyinstaller_args: --add-data "src:src" --target-arch universal2
+            pyinstaller_args: --add-data "src:src"
           - os: macos-latest
             arch: arm64
             asset_name: nimbasms-darwin-arm64
-            pyinstaller_args: --add-data "src:src" --target-arch universal2
+            pyinstaller_args: --add-data "src:src"
           - os: windows-latest
             arch: amd64
             asset_name: nimbasms-windows-amd64.exe
