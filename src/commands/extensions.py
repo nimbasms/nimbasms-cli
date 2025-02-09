@@ -90,6 +90,7 @@ def list_extensions(
 @app.command()
 def create(
     name: str = typer.Option(..., help="Extension name"),
+    category: str = typer.Option(..., help="Extension category"),
     description: str = typer.Option(..., help="Extension description"),
     base_api_url: str = typer.Option(..., help="Base API URL"),
     auth_type: AuthType = typer.Option(
@@ -105,6 +106,7 @@ def create(
         
         ext_data = CreateExtension(
             name=name,
+            category=category,
             description=description,
             base_api_url=base_api_url,
             auth_type=auth_type,

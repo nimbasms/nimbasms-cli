@@ -180,6 +180,7 @@ def test_create_extension(runner: CliRunner, mock_client: Mock) -> None:
     mock_client.create_extension.return_value = Extension(
         extensionid=test_id,
         name="New Extension",
+        category='payments',
         description="A new test extension",
         base_api_url="https://api.test.com",
         auth_type=AuthType.NONE,
@@ -192,6 +193,7 @@ def test_create_extension(runner: CliRunner, mock_client: Mock) -> None:
     result = runner.invoke(app, [
         "create",
         "--name", "New Extension",
+        "--category", "payments",
         "--description", "A new test extension",
         "--base-api-url", "https://api.test.com",
     ])
@@ -383,6 +385,7 @@ def test_create_extension_oauth2(runner: CliRunner, mock_client: Mock) -> None:
     mock_client.create_extension.return_value = Extension(
         extensionid=UUID("12345678-1234-5678-1234-567812345678"),
         name="OAuth2 Test",
+        category="crm",
         auth_type=AuthType.OAUTH2,
         description="Test OAuth2 extension",
         base_api_url="https://api.test.com",
@@ -395,6 +398,7 @@ def test_create_extension_oauth2(runner: CliRunner, mock_client: Mock) -> None:
     result = runner.invoke(app, [
         "create",
         "--name", "OAuth2 Test",
+        "--category", "crm",
         "--description", "Test OAuth2 extension",
         "--base-api-url", "https://api.test.com",
         "--auth-type", "oauth2"

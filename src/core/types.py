@@ -64,6 +64,7 @@ class Extension(BaseModel):
 class CreateExtension(BaseModel):
     """Model for creating a new extension."""
     name: str = Field(max_length=30)
+    category: str = Field(max_length=100)
     description: str = Field(max_length=400)
     base_api_url: HttpUrl
     auth_type: AuthType

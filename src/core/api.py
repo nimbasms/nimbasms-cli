@@ -23,7 +23,7 @@ class APIClient:
         self,
         service_id: str,
         secret_token: str,
-        base_url: str = "https://api.test.nimbasms.com/v1",
+        base_url: str = "https://api.nimbasms.com/v1",
     ) -> None:
         """Initialize API client.
 
