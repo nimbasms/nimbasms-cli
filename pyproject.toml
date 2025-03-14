@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nimbasms-cli"
-version = "0.1.31"
+version = "0.1.32"
 description = "Interface en ligne de commande officielle pour l'API Nimba SMS"
 authors = ["Nimba SMS <technical@nimbasms.com>"]
 readme = "README.md"
