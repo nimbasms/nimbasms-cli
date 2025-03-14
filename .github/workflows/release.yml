@@ -47,13 +47,17 @@ jobs:
       - name: Build with cx_Freeze
         run: |
           poetry run pip install cx-Freeze
-          poetry run cxfreeze src/cli.py --target-dir dist/${{ matrix.asset_name }}
+          poetry run cxfreeze src/cli.py --target-dir dist
+
+      - name: Rename built files
+        run: |
+          mv dist/cli ${{ matrix.asset_name }} || mv dist/cli.exe ${{ matrix.asset_name }}
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.asset_name }}
-          path: dist/${{ matrix.asset_name }}/*
+          path: dist/${{ matrix.asset_name }}
           retention-days: 1
 
   release:
@@ -73,10 +77,10 @@ jobs:
 
       - name: Prepare binaries for release
         run: |
-          chmod +x dist/nimbasms-linux-amd64/nimbasms-linux-amd64 || true
-          chmod +x dist/nimbasms-darwin-amd64/nimbasms-darwin-amd64 || true
-          chmod +x dist/nimbasms-darwin-arm64/nimbasms-darwin-arm64 || true
-          chmod +x dist/nimbasms-windows-amd64.exe/nimbasms-windows-amd64.exe || true
+          chmod +x dist/nimbasms-linux-amd64 || true
+          chmod +x dist/nimbasms-darwin-amd64 || true
+          chmod +x dist/nimbasms-darwin-arm64 || true
+          chmod +x dist/nimbasms-windows-amd64.exe || true
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -89,7 +93,7 @@ jobs:
           prerelease: false
           generate_release_notes: true
           files: |
-            dist/nimbasms-linux-amd64/*
-            dist/nimbasms-darwin-amd64/*
-            dist/nimbasms-darwin-arm64/*
-            dist/nimbasms-windows-amd64.exe/*
+            dist/nimbasms-linux-amd64
+            dist/nimbasms-darwin-amd64
+            dist/nimbasms-darwin-arm64
+            dist/nimbasms-windows-amd64.exe
