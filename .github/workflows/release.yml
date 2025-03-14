@@ -49,9 +49,15 @@ jobs:
           poetry run pip install cx-Freeze
           poetry run cxfreeze src/cli.py --target-dir dist
 
-      - name: Rename built files
+      - name: Rename built files (Linux and macOS)
+        if: runner.os != 'Windows'
         run: |
-          mv dist/cli ${{ matrix.asset_name }} || mv dist/cli.exe ${{ matrix.asset_name }}
+          mv dist/cli ${{ matrix.asset_name }}
+
+      - name: Rename built files (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          mv dist/cli.exe ${{ matrix.asset_name }}
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
