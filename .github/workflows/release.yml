@@ -16,18 +16,18 @@ jobs:
             arch: amd64
             asset_name: nimbasms-linux-amd64
             build_tool: cxfreeze
-          - os: macos-latest
-            arch: amd64
-            asset_name: nimbasms-darwin-amd64
-            build_tool: cxfreeze
-          - os: macos-latest
-            arch: arm64
-            asset_name: nimbasms-darwin-arm64
-            build_tool: cxfreeze
           - os: windows-latest
             arch: amd64
             asset_name: nimbasms-windows-amd64.exe
             build_tool: cxfreeze
+          - os: macos-latest
+            arch: amd64
+            asset_name: nimbasms-darwin-amd64
+            build_tool: py2app
+          - os: macos-latest
+            arch: arm64
+            asset_name: nimbasms-darwin-arm64
+            build_tool: py2app
 
     steps:
       - name: Checkout code
@@ -44,15 +44,22 @@ jobs:
           pip install poetry
           poetry install
 
-      - name: Build with cx_Freeze
+      - name: Build with cx_Freeze (Linux and Windows)
+        if: matrix.build_tool == 'cxfreeze'
         run: |
           poetry run pip install cx-Freeze
           poetry run cxfreeze src/cli.py --target-dir dist
 
+      - name: Build with py2app (macOS)
+        if: matrix.build_tool == 'py2app'
+        run: |
+          poetry run pip install py2app
+          poetry run python setup.py py2app
+
       - name: Rename built files (Linux and macOS)
         if: runner.os != 'Windows'
         run: |
-          mv dist/cli ${{ matrix.asset_name }}
+          mv dist/cli ${{ matrix.asset_name }} || mv dist/cli.app ${{ matrix.asset_name }}
 
       - name: Rename built files (Windows)
         if: runner.os == 'Windows'
